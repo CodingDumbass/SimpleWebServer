@@ -14,19 +14,12 @@ namespace SimpleWebServer.Server.HTTP
         public HeaderCollection() => this.headers = new Dictionary<string, Header>();
 
         public int Count => this.headers.Count;
-
-        public void Add(string name, string value)
-        {
-            var header = new Header(name, value);
-
-            if(!headers.ContainsKey(name))
-                this.headers.Add(name, header);
-        }
+        public string this[string name] => this.headers[name].Value;
+        public bool Contains(string name)=>this.headers.ContainsKey(name);
+        public void Add(string name, string value)=>this.headers[name] = new Header(name, value);
 
         public IEnumerator<Header> GetEnumerator() => this.headers.Values.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
-
-        public void ClearCollection() => headers.Clear();
     }
 }

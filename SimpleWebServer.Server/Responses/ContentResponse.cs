@@ -1,20 +1,16 @@
 ﻿using SimpleWebServer.Server.Common;
 using SimpleWebServer.Server.HTTP;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SimpleWebServer.Server.Responses
 {
-    public class ContentResponse:Response
+    public class ContentResponse : Response
     {
-        public ContentResponse(string content, string contentType, Action<Request, Response> preRenderAction = null):base(StatusCode.OK)
+        public ContentResponse(string content, string contentType, Action<Request, Response> preRenderAction = null) : base(StatusCode.OK)
         {
             Guard.AgainstNull(content);
             Guard.AgainstNull(contentType);
-            
+
             this.PreRenderAction = preRenderAction;
 
             this.Headers.Add(Header.ContentType, contentType);
@@ -24,7 +20,7 @@ namespace SimpleWebServer.Server.Responses
 
         public override string ToString()
         {
-            if(this.Body != null)
+            if (this.Body != null)
             {
                 var contentLength = Encoding.UTF8.GetByteCount(this.Body).ToString();
 

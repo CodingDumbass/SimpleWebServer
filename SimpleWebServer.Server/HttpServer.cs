@@ -1,10 +1,8 @@
 ﻿using SimpleWebServer.Server.HTTP;
 using SimpleWebServer.Server.Routing;
-using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SimpleWebServer.Server
 {
@@ -23,16 +21,16 @@ namespace SimpleWebServer.Server
 
             routingTableConfiguration(this.routingTable = new RoutingTable());
         }
-        public HttpServer(int port, Action<IRoutingTable> routingTable):this("127.0.0.1", port, routingTable)
+        public HttpServer(int port, Action<IRoutingTable> routingTable) : this("127.0.0.1", port, routingTable)
         {
 
         }
 
-        public HttpServer(Action<IRoutingTable> routingTable):this(8080, routingTable)
+        public HttpServer(Action<IRoutingTable> routingTable) : this(8080, routingTable)
         {
 
         }
-        private string ReadRequest(NetworkStream networkStream)
+        private async Task<string> ReadRequest(NetworkStream networkStream)
         {
             var bufferLength = 1024;
             var buffer = new byte[bufferLength];
@@ -42,7 +40,7 @@ namespace SimpleWebServer.Server
             var requestBuilder = new StringBuilder();
             do
             {
-                var bytesRead = networkStream.Read(buffer, 0, bufferLength);
+                var bytesRead = await networkStream.ReadAsync(buffer, 0, bufferLength);
 
                 totalBytes += bytesRead;
 
@@ -57,43 +55,48 @@ namespace SimpleWebServer.Server
 
             return requestBuilder.ToString();
         }
-        public void Start()
+        public async Task Start()
         {
             this.serverListenter.Start();
+
+
 
             Console.WriteLine($"Server started on port {port}.");
             Console.WriteLine("Listening for requests...");
 
             while (true)
             {
-                var connection = serverListenter.AcceptTcpClient();
+                var connection = await serverListenter.AcceptTcpClientAsync();
 
-                var networkStream = connection.GetStream();
+                _ = Task.Run(async () =>
+                {
+                    var networkStream = connection.GetStream();
 
-                var requestText = this.ReadRequest(networkStream);
-                //WriteResponse(networkStream, "Hello there!");
+                    var requestText = await this.ReadRequest(networkStream);
+                    //WriteResponse(networkStream, "Hello there!");
 
-                Console.WriteLine(requestText);
+                    Console.WriteLine(requestText);
 
-                var request = Request.Parse(requestText);
+                    var request = Request.Parse(requestText);
 
-                var response = this.routingTable.MatchRequest(request);
+                    var response = this.routingTable.MatchRequest(request);
 
-                if(response.PreRenderAction != null)
-                    response.PreRenderAction(request, response);
+                    if (response.PreRenderAction != null)
+                        response.PreRenderAction(request, response);
 
-                WriteResponse(networkStream, response);
+                    await WriteResponse(networkStream, response);
 
-                connection.Close();
+                    connection.Close();
 
+                });
             }
         }
 
-        private void WriteResponse(NetworkStream networkStream, Response response)
+        private async Task WriteResponse(NetworkStream networkStream, Response response)
         {
             var responseBytes = Encoding.UTF8.GetBytes(response.ToString());
 
-            networkStream.Write(responseBytes);
+            await networkStream.WriteAsync(responseBytes);
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Web;
 
 namespace SimpleWebServer.Server.HTTP
 {
@@ -13,7 +8,7 @@ namespace SimpleWebServer.Server.HTTP
         public string Url { get; private set; }
         public HeaderCollection Headers { get; private set; }
         public string Body { get; private set; }
-        public IReadOnlyDictionary<string, string> Form {get; private set;}
+        public IReadOnlyDictionary<string, string> Form { get; private set; }
         public static Request Parse(string request)
         {
             var lines = request.Split("\r\n");
@@ -57,7 +52,7 @@ namespace SimpleWebServer.Server.HTTP
                 {
                     throw new InvalidOperationException("Request is not valid.");
                 }
-                
+
                 var headerName = headerParts[0];
                 var headerValue = headerParts[1];
 
@@ -72,27 +67,30 @@ namespace SimpleWebServer.Server.HTTP
             {
                 return (Method)Enum.Parse(typeof(Method), method, true);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw new InvalidOperationException($"Method '{method}' is not supported");
             }
         }
 
-        private static Dictionary<string,string> ParseForm(HeaderCollection headers, string body)
+        private static Dictionary<string, string> ParseForm(HeaderCollection headers, string body)
         {
-            var formCollection = new Dictionary<string,string>();
+            var formCollection = new Dictionary<string, string>();
 
-            if(headers.Contains(Header.ContentType) && headers[Header.ContentType] == ContentType.FormUrlEncoded)
+            var content_type = headers[Header.ContentType];
+
+            if (headers.Contains(Header.ContentType) /*&& content_type == ContentType.FormUrlEncoded*/)
             {
                 var parsedResult = ParseFormData(body);
 
-                foreach(var (name, value) in parsedResult)
+                foreach (var (name, value) in parsedResult)
                     formCollection.Add(name, value);
             }
             return formCollection;
         }
 
-        private static Dictionary<string,string> ParseFormData(string bodyLines)=>HttpUtility.UrlDecode(bodyLines)
+        private static Dictionary<string, string> ParseFormData(string bodyLines) =>
+        HttpUtility.UrlDecode(bodyLines)
         .Split('&')
         .Select(part => part.Split('='))
         .Where(part => part.Length == 2)

@@ -59,8 +59,6 @@ namespace SimpleWebServer.Server
         {
             this.serverListenter.Start();
 
-
-
             Console.WriteLine($"Server started on port {port}.");
             Console.WriteLine("Listening for requests...");
 
@@ -73,7 +71,6 @@ namespace SimpleWebServer.Server
                     var networkStream = connection.GetStream();
 
                     var requestText = await this.ReadRequest(networkStream);
-                    //WriteResponse(networkStream, "Hello there!");
 
                     Console.WriteLine(requestText);
 
@@ -87,7 +84,6 @@ namespace SimpleWebServer.Server
                     await WriteResponse(networkStream, response);
 
                     connection.Close();
-
                 });
             }
         }

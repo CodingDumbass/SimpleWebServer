@@ -16,7 +16,6 @@ namespace SimpleWebServer.Server.HTTP
 
             this.Headers.Add(Header.Server, "My Web Server");
             this.Headers.Add(Header.Date, $"{DateTime.UtcNow:r}");
-            
         }
         public override string ToString()
         {

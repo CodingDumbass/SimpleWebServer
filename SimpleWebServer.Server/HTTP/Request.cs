@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Net.Http.Headers;
+using System.Web;
 
 namespace SimpleWebServer.Server.HTTP
 {
@@ -9,7 +10,9 @@ namespace SimpleWebServer.Server.HTTP
         public HeaderCollection Headers { get; private set; }
         public CookieCollection Cookies { get; private set; }
         public string Body { get; private set; }
+        public Session Session { get; private set; }
         public IReadOnlyDictionary<string, string> Form { get; private set; }
+        public static Dictionary<string, Session> Sessions = new();
         public static Request Parse(string request)
         {
             var lines = request.Split("\r\n");
@@ -24,6 +27,8 @@ namespace SimpleWebServer.Server.HTTP
 
             var cookies = ParseCookies(headers);
 
+            var session = GetSession(cookies);
+
             var bodyLines = lines.Skip(headers.Count + 2).ToArray();
 
             var body = string.Join("\r\n", bodyLines);
@@ -37,8 +42,19 @@ namespace SimpleWebServer.Server.HTTP
                 Headers = headers,
                 Cookies = cookies,
                 Body = body,
+                Session = session,
                 Form = form
             };
+        }
+
+        private static Session GetSession(CookieCollection cookies)
+        {
+            var sessionId = cookies.Contains(Session.SessionCookieName) ? cookies[Session.SessionCookieName] : Guid.NewGuid().ToString();
+
+            if ((!Sessions.ContainsKey(sessionId)))
+                Sessions[sessionId] = new Session(sessionId);
+
+            return Sessions[sessionId];
         }
 
         private static CookieCollection ParseCookies(HeaderCollection headers)

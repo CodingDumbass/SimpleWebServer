@@ -15,18 +15,38 @@ namespace SimpleWebServer.Demo
             await DownloadSitesAsTextFile(FileName, new string[] { "https://www.keybr.com/" });
 
             var server = new HttpServer(routes => routes
+            .MapGet("/", new TextResponse("Hello from the server!"))
             .MapGet("/HTML", new HtmlResponse(new HtmlBuilder("/HTML").GetFile))
             .MapPost("/HTML", new TextResponse("", AddFormDataAction))
             .MapGet("/Redirect", new RedirectResponse("https://softuni.bg/"))
             .MapGet("/Content", new HtmlResponse(new HtmlBuilder("/Content").GetFile))
             .MapPost("/Content", new TextFileResponce(FileName))
-            .MapGet("/Cookies", new HtmlResponse("", AddCookiesAction)));
+            .MapGet("/Cookies", new HtmlResponse("", AddCookiesAction))
+            .MapGet("/Session", new TextResponse("", DisplaySessionInfoAction)));
 
            await server.Start();
         }
+        private static void DisplaySessionInfoAction(Request request, Response response)
+        {
+            var sessionExists = request.Session.ContainsKey(Session.SessionCurrentDateKey);
+
+            var bodyText = "";
+
+            if (sessionExists)
+            {
+                var currentDate = request.Session[Session.SessionCurrentDateKey];
+                bodyText = $"Stored date: {currentDate}!";
+            }
+            else
+                bodyText = "Current date stored!";
+
+            response.Body = "";
+            response.Body += bodyText;
+
+        }
         public static void AddCookiesAction(Request request, Response response)
         {
-            var requestHasCookies = request.Cookies.Any();
+            var requestHasCookies = request.Cookies.Any(c => c.Name != Session.SessionCookieName);
             response.Body = "";
 
             if (requestHasCookies)

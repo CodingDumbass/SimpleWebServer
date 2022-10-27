@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using SimpleWebServer.Server.Responses;
 
 namespace SimpleWebServer.Server.HTTP
 {
@@ -6,6 +7,7 @@ namespace SimpleWebServer.Server.HTTP
     {
         public StatusCode StatusCode { get; init; }
         public HeaderCollection Headers { get; } = new HeaderCollection();
+        public CookieCollection Cookies { get; } = new CookieCollection();
         public string Body { get; set; }
         public Action<Request, Response> PreRenderAction { get; protected set; }
         public Response(StatusCode statusCode)
@@ -14,6 +16,7 @@ namespace SimpleWebServer.Server.HTTP
 
             this.Headers.Add(Header.Server, "My Web Server");
             this.Headers.Add(Header.Date, $"{DateTime.UtcNow:r}");
+            
         }
         public override string ToString()
         {
@@ -22,15 +25,16 @@ namespace SimpleWebServer.Server.HTTP
             result.AppendLine($"HTTP/1.1 {(int)this.StatusCode} {this.StatusCode}");
 
             foreach (var header in this.Headers)
-            {
                 result.AppendLine(header.ToString());
-            }
+
+            foreach (var cookie in this.Cookies)
+                result.AppendLine($"{Header.SetCookie}: {cookie}");
+
             result.AppendLine();
 
             if (!string.IsNullOrEmpty(this.Body))
-            {
                 result.Append(this.Body);
-            }
+
             return result.ToString();
         }
 

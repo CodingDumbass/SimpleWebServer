@@ -2,6 +2,8 @@
 using SimpleWebServer.Server.HTML;
 using SimpleWebServer.Server.HTTP;
 using SimpleWebServer.Server.Responses;
+using System.Text;
+using System.Web;
 
 namespace SimpleWebServer.Demo
 {
@@ -17,11 +19,43 @@ namespace SimpleWebServer.Demo
             .MapPost("/HTML", new TextResponse("", AddFormDataAction))
             .MapGet("/Redirect", new RedirectResponse("https://softuni.bg/"))
             .MapGet("/Content", new HtmlResponse(new HtmlBuilder("/Content").GetFile))
-            .MapPost("/Content", new TextFileResponce(FileName)));
+            .MapPost("/Content", new TextFileResponce(FileName))
+            .MapGet("/Cookies", new HtmlResponse("", AddCookiesAction)));
 
            await server.Start();
         }
+        public static void AddCookiesAction(Request request, Response response)
+        {
+            var requestHasCookies = request.Cookies.Any();
+            response.Body = "";
 
+            if (requestHasCookies)
+            {
+                var cookieText = new StringBuilder();
+                cookieText.AppendLine("<h1>Cookies</h1>");
+
+                cookieText.Append("<table border='1'><tr><th>Name</th><th>Value</th></tr>");
+
+                foreach (var cookie in request.Cookies)
+                {
+                    cookieText.Append("<tr>");
+                    cookieText.Append($"<td>{HttpUtility.HtmlEncode(cookie.Name)}</td>");
+                    cookieText.Append($"<td>{HttpUtility.HtmlEncode(cookie.Value)}</td>");
+                    cookieText.Append("</tr>");
+                }
+                cookieText.Append("</table>");
+
+                response.Body = cookieText.ToString();
+            }
+            else
+                response.Body = "<h1>Cookies set!</h1>";
+
+            if (!requestHasCookies)
+            {
+                response.Cookies.Add("My-Cookie", "My-Value");
+                response.Cookies.Add("My-Second-Cookie", "My-Second-Value");
+            }
+        }
         private static async Task<string> DownloadWebSiteContent(string url)
         {
             var httpClient = new HttpClient();

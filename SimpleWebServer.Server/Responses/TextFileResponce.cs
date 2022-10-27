@@ -1,5 +1,4 @@
 ﻿using SimpleWebServer.Server.HTTP;
-
 namespace SimpleWebServer.Server.Responses
 {
     public class TextFileResponce : Response
@@ -23,7 +22,7 @@ namespace SimpleWebServer.Server.Responses
 
                 this.Headers.Add(Header.ContentLength, fileBytesCount.ToString());
 
-                this.Headers.Add(Header.ContentDisposition, $"attachment; filename =\"{this.FileName}\"");
+                this.Headers.Add(Header.ContentDisposition, $"attachment; filename ="+FileName+";");
             }
             return base.ToString();
         }

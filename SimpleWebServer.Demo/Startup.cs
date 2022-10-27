@@ -7,7 +7,6 @@ namespace SimpleWebServer.Demo
 {
     public class Startup
     {
-
         private const string FileName = "content.txt";
         static async Task Main(string[] args)
         {
@@ -20,7 +19,7 @@ namespace SimpleWebServer.Demo
             .MapGet("/Content", new HtmlResponse(new HtmlBuilder("/Content").GetFile))
             .MapPost("/Content", new TextFileResponce(FileName)));
 
-            await server.Start();
+           await server.Start();
         }
 
         private static async Task<string> DownloadWebSiteContent(string url)

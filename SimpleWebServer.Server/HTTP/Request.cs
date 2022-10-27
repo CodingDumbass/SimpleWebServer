@@ -77,9 +77,7 @@ namespace SimpleWebServer.Server.HTTP
         {
             var formCollection = new Dictionary<string, string>();
 
-            var content_type = headers[Header.ContentType];
-
-            if (headers.Contains(Header.ContentType) /*&& content_type == ContentType.FormUrlEncoded*/)
+            if (headers.Contains(Header.ContentType) && headers[Header.ContentType].Contains(ContentType.FormUrlEncoded))
             {
                 var parsedResult = ParseFormData(body);
 

@@ -2,14 +2,24 @@
 {
     public class HtmlBuilder
     {
-        private string? htmlFile;
-        public HtmlBuilder()
+        private Dictionary<string, List<string>> Files;
+        public HtmlBuilder(string route)
         {
+            Files = new Dictionary<string, List<string>>();
+
+            Files.Add("/HTML", new List<string> {
+                @"E:\C#\SimpleWebServer\SimpleWebServer.Server\Pages\HtmlForm.html"
+            });
+            Files.Add("/Content", new List<string> {
+                @"E:\C#\SimpleWebServer\SimpleWebServer.Server\Pages\DownloadForm.html"
+            });
+
             string line;
-            using (var reader = new StreamReader(@"E:\C#\SimpleWebServer\SimpleWebServer.Server\Pages\Page1.html"))
+            using (var reader = new StreamReader(Files[route][0]))
                 while ((line = reader.ReadLine()) != null)
-                    htmlFile += line.Trim() + "\n";
+                    GetFile += line.Trim() + "\n";
         }
-        public string GetFile() => htmlFile;
+        public string GetFile { get; private set; }
+
     }
 }

@@ -1,15 +1,10 @@
 ﻿using SimpleWebServer.Server.Common;
 using SimpleWebServer.Server.HTTP;
 using SimpleWebServer.Server.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimpleWebServer.Server.Routing
 {
-    public class RoutingTable:IRoutingTable
+    public class RoutingTable : IRoutingTable
     {
         private readonly Dictionary<Method, Dictionary<string, Response>> routes;
 
@@ -21,11 +16,11 @@ namespace SimpleWebServer.Server.Routing
             [Method.Delete] = new(),
         };
 
-        public IRoutingTable Map(string url, Method method, Response response) => method switch 
+        public IRoutingTable Map(string url, Method method, Response response) => method switch
         {
             Method.Get => this.MapGet(url, response),
             Method.Post => this.MapPost(url, response),
-            _=>throw new InvalidOperationException($"Method '{method}' is not supported")
+            _ => throw new InvalidOperationException($"Method '{method}' is not supported")
         };
 
         public IRoutingTable MapGet(string url, Response response)
@@ -54,7 +49,7 @@ namespace SimpleWebServer.Server.Routing
             var requestUrl = request.Url;
 
             if (!this.routes.ContainsKey(requestMethod)
-                || (!this.routes[requestMethod].ContainsKey(requestUrl)))
+                || !this.routes[requestMethod].ContainsKey(requestUrl))
                 return new NotFoundResponse();
 
             return this.routes[requestMethod][requestUrl];

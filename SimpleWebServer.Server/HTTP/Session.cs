@@ -11,6 +11,7 @@ namespace SimpleWebServer.Server.HTTP
     {
         public const string SessionCookieName = "MyWebServerSID";
         public const string SessionCurrentDateKey = "CurrentDate";
+        public const string SessionUserKey = "AuthenticatedUserId";
 
         public string Id { get; init; }
 
@@ -30,5 +31,7 @@ namespace SimpleWebServer.Server.HTTP
             set => this.data[key] = value;
         }
         public bool ContainsKey(string key) => this.data.ContainsKey(key);
+
+        public void Clear() => this.data.Clear();
     }
 }

@@ -13,6 +13,9 @@
             Files.Add("/Content", new List<string> {
                 @"E:\C#\SimpleWebServer\SimpleWebServer.Server\Pages\DownloadForm.html"
             });
+            Files.Add("/Login", new List<string> {
+                @"E:\C#\SimpleWebServer\SimpleWebServer.Server\Pages\LoginForm.html"
+            });
 
             string line;
             using (var reader = new StreamReader(Files[route][0]))

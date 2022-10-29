@@ -12,7 +12,7 @@ namespace SimpleWebServer.Server.HTTP
         public string Body { get; private set; }
         public Session Session { get; private set; }
         public IReadOnlyDictionary<string, string> Form { get; private set; }
-        public static Dictionary<string, Session> Sessions = new();
+        private static Dictionary<string, Session> Sessions = new();
         public static Request Parse(string request)
         {
             var lines = request.Split("\r\n");

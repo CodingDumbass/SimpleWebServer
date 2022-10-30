@@ -1,10 +1,6 @@
 ﻿using SimpleWebServer.Server.HTTP;
 using SimpleWebServer.Server.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace SimpleWebServer.Server.Controllers
 {
@@ -15,6 +11,10 @@ namespace SimpleWebServer.Server.Controllers
         {
             this.Request = request;
         }
+        protected Response View([CallerMemberName] string viewName = "") => new ViewResponse(viewName, this.GetControllerName());
+        protected Response View(object model, [CallerMemberName] string viewName = "") => new ViewResponse(viewName, this.GetControllerName(), model);
+        private string GetControllerName() => this.GetType().Name.Replace(nameof(Controller), string.Empty);
+
         protected Response Text(string text) => new TextResponse(text);
         protected Response Html(string html, CookieCollection cookies = null)
         {

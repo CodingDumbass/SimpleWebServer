@@ -1,11 +1,6 @@
 ﻿using SimpleWebServer.Demo.Controllers;
 using SimpleWebServer.Server;
 using SimpleWebServer.Server.Controllers;
-using SimpleWebServer.Server.HTML;
-using SimpleWebServer.Server.HTTP;
-using SimpleWebServer.Server.Responses;
-using System.Text;
-using System.Web;
 
 namespace SimpleWebServer.Demo
 {

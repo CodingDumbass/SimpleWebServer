@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using SimpleWebServer.Server.Responses;
 
 namespace SimpleWebServer.Server.HTTP
 {
@@ -9,7 +8,7 @@ namespace SimpleWebServer.Server.HTTP
         public HeaderCollection Headers { get; } = new HeaderCollection();
         public CookieCollection Cookies { get; } = new CookieCollection();
         public string Body { get; set; }
-        public Action<Request, Response> PreRenderAction { get; protected set; }
+        //public Action<Request, Response> PreRenderAction { get; protected set; }
         public Response(StatusCode statusCode)
         {
             this.StatusCode = statusCode;

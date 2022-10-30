@@ -29,7 +29,7 @@ namespace SimpleWebServer.Server.Routing
         public IRoutingTable MapGet(string path, Func<Request, Response> responseFunction) => Map(Method.Get, path, responseFunction);
 
         public IRoutingTable MapPost(string path, Func<Request, Response> responseFunction) => Map(Method.Post, path, responseFunction);
-        
+
         public Response MatchRequest(Request request)
         {
             var requestMethod = request.Method;

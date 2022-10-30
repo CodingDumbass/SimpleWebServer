@@ -21,9 +21,9 @@ namespace SimpleWebServer.Server
 
             routingTableConfiguration(this.routingTable = new RoutingTable());
         }
-        public HttpServer(int port, Action<IRoutingTable> routingTable) : this("127.0.0.1", port, routingTable){}
+        public HttpServer(int port, Action<IRoutingTable> routingTable) : this("127.0.0.1", port, routingTable) { }
 
-        public HttpServer(Action<IRoutingTable> routingTable) : this(8080, routingTable){}
+        public HttpServer(Action<IRoutingTable> routingTable) : this(8080, routingTable) { }
         private async Task<string> ReadRequest(NetworkStream networkStream)
         {
             var bufferLength = 1024;
@@ -72,8 +72,8 @@ namespace SimpleWebServer.Server
 
                     var response = this.routingTable.MatchRequest(request);
 
-                    if (response.PreRenderAction != null)
-                        response.PreRenderAction(request, response);
+                    //if (response.PreRenderAction != null)
+                    //    response.PreRenderAction(request, response);
 
                     AddSession(request, response);
 

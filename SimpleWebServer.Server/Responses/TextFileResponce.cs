@@ -22,7 +22,7 @@ namespace SimpleWebServer.Server.Responses
 
                 this.Headers.Add(Header.ContentLength, fileBytesCount.ToString());
 
-                this.Headers.Add(Header.ContentDisposition, $"attachment; filename ="+FileName+";");
+                this.Headers.Add(Header.ContentDisposition, $"attachment; filename =" + FileName + ";");
             }
             return base.ToString();
         }

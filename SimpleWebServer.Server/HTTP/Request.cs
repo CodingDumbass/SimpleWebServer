@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using System.Web;
+﻿using System.Web;
 
 namespace SimpleWebServer.Server.HTTP
 {
@@ -61,13 +60,13 @@ namespace SimpleWebServer.Server.HTTP
         {
             var cookieCollection = new CookieCollection();
 
-            if (headers.Contains(Header.Cookie)) 
+            if (headers.Contains(Header.Cookie))
             {
                 var cookieHeader = headers[Header.Cookie];
 
                 var allCookies = cookieHeader.Split(';');
 
-                foreach(var cookieText in allCookies)
+                foreach (var cookieText in allCookies)
                 {
                     var cookieParts = cookieText.Split('=');
 

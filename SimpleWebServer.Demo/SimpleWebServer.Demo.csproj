@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,6 +9,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SimpleWebServer.Server\SimpleWebServer.Server.csproj" />
+	  <Content Include="Views\**\*.*">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Views\Home\Content.cshtml" />
+    <None Remove="Views\Home\Html.cshtml" />
+    <None Remove="Views\Home\HtmlFormPost.cshtml" />
+    <None Remove="Views\User\Login.cshtml" />
   </ItemGroup>
 
 </Project>

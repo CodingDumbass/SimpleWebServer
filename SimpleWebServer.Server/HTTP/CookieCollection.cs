@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 
 namespace SimpleWebServer.Server.HTTP
 {
-    public class CookieCollection:IEnumerable<Cookie>
+    public class CookieCollection : IEnumerable<Cookie>
     {
         private readonly Dictionary<string, Cookie> cookies;
         public CookieCollection() => this.cookies = new Dictionary<string, Cookie>();

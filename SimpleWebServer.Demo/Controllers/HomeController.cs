@@ -1,25 +1,34 @@
 ﻿using SimpleWebServer.Server.Controllers;
-using SimpleWebServer.Server.HTML;
 using SimpleWebServer.Server.HTTP;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using SimpleWebServer.Server.Models;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace SimpleWebServer.Demo.Controllers
 {
-    public class HomeController:Controller
+    public class HomeController : Controller
     {
         private const string FileName = @"E:\C#\SimpleWebServer\SimpleWebServer.Demo\bin\Debug\net6.0\content.txt";
         public HomeController(Request request) : base(request)
         {
 
         }
+        public Response HtmlFormPost()
+        {
+            var name = this.Request.Form["Name"];
+            var age = this.Request.Form["Age"];
+
+            var model = new FormViewModel() 
+            {
+                Name = name,
+                Age = int.Parse(age)
+            };
+
+            return View(model);
+        }
         public Response Index() => Text("Hello from the server!");
 
-        public Response Content() => Html(new HtmlBuilder("/Content").GetFile);
+        public Response Content() => View();
 
         public Response Cookies()
         {
@@ -81,17 +90,7 @@ namespace SimpleWebServer.Demo.Controllers
             return _File(FileName);
         }
 
-        public Response Html() => Html(new HtmlBuilder("/HTML").GetFile);
-
-        public Response HtmlFormPost()
-        {
-            string formData = string.Empty;
-
-            foreach(var (key, value) in this.Request.Form)
-                formData += $"{key} - {value}{Environment.NewLine}";
-
-            return Text(formData);
-        }
+        public Response Html() => View();
 
         public Response Redirect() => Redirect("https://www.youtube.com/");
 
@@ -104,7 +103,7 @@ namespace SimpleWebServer.Demo.Controllers
             if (sessionExists)
             {
                 var currentDate = Request.Session[currentDateKey];
-                return Text($"Stored date: {currentDate}!") ;
+                return Text($"Stored date: {currentDate}!");
             }
 
             return Text("Current date stored!");
